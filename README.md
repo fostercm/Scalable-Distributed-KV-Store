@@ -3,11 +3,11 @@
 
 # Goals
 - [Ease of use](#ease-of-use)
-- Scalability
-- Fault tolerance
-- Observability
-- Efficiency
-- Security
+- [Scalability](#scalability)
+- [Fault tolerance](#fault-tolerance)
+- [Observability](#observability)
+- [Efficiency](#efficiency)
+- [Security](#security)
 
 ## Ease of use
 - Simple user interface (reminiscent of a standard Go map)
