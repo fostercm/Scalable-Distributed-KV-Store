@@ -1,3 +1,6 @@
+// This file contains the launch script for the router service
+// It sets up the RPC server, listens for incoming connections, and serves requests
+// Provide a port number as a command-line argument to specify which port the router should listen on
 package main
 
 import (
@@ -36,6 +39,7 @@ func main() {
 			continue
 		}
 
+		log.Println("Accepted connection from", connection.RemoteAddr())
 		go rpcserver.ServeConn(connection)
 	}
 }

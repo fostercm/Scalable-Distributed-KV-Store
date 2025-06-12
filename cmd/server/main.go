@@ -1,3 +1,6 @@
+// This file contains the launch script for the KVServer service
+// It sets up the RPC server, listens for incoming connections, and serves requests
+// Provide the address, port, number of shards, and router socket as command-line arguments
 package main
 
 import (
