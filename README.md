@@ -42,7 +42,7 @@ The overall goal of this project is to get an intimate understanding of distribu
 
 ## Phases
 This project was implemented in multiple stages, each with a specific goal in order to show progression in knowledge and ability:
-- Phase 0: [Problem definition and planning](#phase-0:-problem-definition-and-planning)
+- Phase 0: [Problem definition and planning](#phase-0-problem-definition-and-planning)
 - Phase 1: [Basic functionality](https://github.com/fostercm/Scalable-Distributed-KV-Store/tree/Phase-1-Basic-Functionality)
 - Phase 2: [Sharding and scaling](https://github.com/fostercm/Scalable-Distributed-KV-Store/tree/Phase-2-Sharding/Scaling)
 - Phase 3: Dynamic scaling
