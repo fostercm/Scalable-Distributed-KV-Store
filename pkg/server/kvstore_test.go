@@ -1,19 +1,19 @@
-package kvstore_test
+package server_test
 
 import (
-	"kvstore/pkg/kvstore"
+	kvstore "kvstore/pkg/server"
 	"testing"
 )
 
 func TestNewKVStore(t *testing.T) {
-	store := kvstore.NewKVStore()
+	store := kvstore.NewKVServer(4)
 	if store == nil {
 		t.Fatalf("Expected non-nil KVStore instance")
 	}
 }
 
 func TestSetAndGet(t *testing.T) {
-	store := kvstore.NewKVStore()
+	store := kvstore.NewKVServer(4)
 
 	setArgs := &kvstore.SetArgs{Key: "foo", Value: "bar"}
 	setReply := &kvstore.SetReply{}
@@ -36,7 +36,7 @@ func TestSetAndGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	store := kvstore.NewKVStore()
+	store := kvstore.NewKVServer(4)
 
 	_ = store.Set(&kvstore.SetArgs{Key: "temp", Value: "123"}, &kvstore.SetReply{})
 
@@ -55,7 +55,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
-	store := kvstore.NewKVStore()
+	store := kvstore.NewKVServer(4)
 
 	_ = store.Set(&kvstore.SetArgs{Key: "present", Value: "yes"}, &kvstore.SetReply{})
 
@@ -79,7 +79,7 @@ func TestExists(t *testing.T) {
 }
 
 func TestLength(t *testing.T) {
-	store := kvstore.NewKVStore()
+	store := kvstore.NewKVServer(4)
 
 	store.Set(&kvstore.SetArgs{Key: "a", Value: "1"}, &kvstore.SetReply{})
 	store.Set(&kvstore.SetArgs{Key: "b", Value: "2"}, &kvstore.SetReply{})
