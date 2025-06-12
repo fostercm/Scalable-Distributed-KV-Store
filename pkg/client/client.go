@@ -4,6 +4,7 @@
 package client
 
 import (
+	"fmt"
 	"kvstore/pkg/router"
 	"net/rpc"
 )
@@ -11,6 +12,7 @@ import (
 // Client wraps an RPC client for communication with the router
 type Client struct {
 	*rpc.Client
+	Socket string
 }
 
 // NewClient creates a new Client instance connected to the specified address
@@ -18,10 +20,15 @@ type Client struct {
 func NewClient(socket string) (*Client, error) {
 	client, err := rpc.Dial("tcp", socket)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to router at %s: %v", socket, err)
 	}
 
-	return &Client{Client: client}, nil
+	newClient := &Client{
+		Client: client,
+		Socket: socket,
+	}
+
+	return newClient, nil
 }
 
 // getShardClient retrieves the shard client for a given key
@@ -32,12 +39,12 @@ func (c *Client) getShardClient(key string) (*Client, int, error) {
 	reply := &router.GetRouteReply{}
 	err := c.Call("StaticShardRouter.GetRoute", args, reply)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("route error for key %s: %v", key, err)
 	}
 
 	shardClient, err := NewClient(reply.Socket)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("failed to create shard client for socket %s: %v", reply.Socket, err)
 	}
 
 	return shardClient, reply.ShardIdx, nil
@@ -50,7 +57,7 @@ func (c *Client) getAllSockets() ([]string, error) {
 	reply := &router.GetAllSocketsReply{}
 	err := c.Call("StaticShardRouter.GetAllSockets", args, reply)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to get all sockets: %v", err)
 	}
 
 	return reply.Sockets, nil

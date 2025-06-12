@@ -31,10 +31,11 @@ func main() {
 	// Accept and serve incoming connections
 	for {
 		connection, err := listener.Accept()
-		if err == nil {
-			go rpcserver.ServeConn(connection)
-		} else {
+		if err != nil {
 			log.Println("Error accepting connection: ", err)
+			continue
 		}
+
+		go rpcserver.ServeConn(connection)
 	}
 }

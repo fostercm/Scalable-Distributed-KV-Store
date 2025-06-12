@@ -25,16 +25,14 @@ type ShardRoute struct {
 // The StaticShardRouter struct contains the routing information for all shards
 // It holds a slice of routes to each shard and the total number of shards
 type StaticShardRouter struct {
-	Routes    []*ShardRoute
-	numShards int
-	mutex     sync.RWMutex
+	Routes []*ShardRoute
+	mu     sync.RWMutex
 }
 
 // NewRouter initializes a new StaticShardRouter with an empty route list and zero shards
 func NewRouter() *StaticShardRouter {
 	return &StaticShardRouter{
-		Routes:    make([]*ShardRoute, 0),
-		numShards: 0,
+		Routes: make([]*ShardRoute, 0),
 	}
 }
 
@@ -45,11 +43,11 @@ func NewRouter() *StaticShardRouter {
 func (r *StaticShardRouter) GetRoute(args *GetRouteArgs, reply *GetRouteReply) error {
 	// xxhash is used for fast, non-cryptographic hashing of keys for simple and efficient routing
 	hash := xxhash.Sum64String(args.Key)
-	routeIdx := int(hash % uint64(r.numShards))
+	routeIdx := int(hash % uint64(len(r.Routes)))
 
-	r.mutex.RLock()
+	r.mu.RLock()
 	route := r.Routes[routeIdx]
-	r.mutex.RUnlock()
+	r.mu.RUnlock()
 	if route == nil {
 		return fmt.Errorf("no route found for key %s", args.Key)
 	}
@@ -66,8 +64,8 @@ func (r *StaticShardRouter) GetRoute(args *GetRouteArgs, reply *GetRouteReply) e
 func (r *StaticShardRouter) GetAllSockets(args *GetAllSocketsArgs, reply *GetAllSocketsReply) error {
 	reply.Sockets = make([]string, 0)
 
-	r.mutex.RLock()
-	defer r.mutex.RUnlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
 	for _, route := range r.Routes {
 		if !slices.Contains(reply.Sockets, route.Socket) {
@@ -82,8 +80,15 @@ func (r *StaticShardRouter) GetAllSockets(args *GetAllSocketsArgs, reply *GetAll
 // It takes the address, port, and number of shards on the server as arguments
 // Thread-safe access is ensured using a write mutex
 func (r *StaticShardRouter) RegisterServer(args *RegisterServerArgs, reply *RegisterServerReply) error {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
+	if args.Port < 0 || args.Port > 65535 {
+		return fmt.Errorf("valid port numbers are 0-65535, got: %d", args.Port)
+	}
+	if args.NumShards <= 0 {
+		return fmt.Errorf("number of shards must be greater than 0, got: %d", args.NumShards)
+	}
+
+	r.mu.Lock()
+	defer r.mu.Unlock()
 
 	for i := range args.NumShards {
 		route := &ShardRoute{
@@ -92,10 +97,15 @@ func (r *StaticShardRouter) RegisterServer(args *RegisterServerArgs, reply *Regi
 		}
 
 		r.Routes = append(r.Routes, route)
-		r.numShards++
 	}
 
-	log.Println("Registered new server:", "Address: ", args.Address, "Port: ", args.Port, "Shards: ", args.NumShards, "Total Shards: ", r.numShards)
+	log.Println(
+		"Registered new server:",
+		"\n\tAddress: ", args.Address,
+		"\n\tPort: ", args.Port,
+		"\n\tShards: ", args.NumShards,
+		"\n\tTotal Shards: ", len(r.Routes),
+	)
 
 	return nil
 }
