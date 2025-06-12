@@ -1,5 +1,6 @@
 # Scalable-Distributed-KV-Store
-
+I am in the process of designing a distributed key-value store in Go inspired by Apache Cassandra and coursework from the MIT graduate course **6.5840: Distributed Systems**.
+The overall goal of this project is to get an intimate understanding of distributed systems fundamentals, challenges, and techniques at scale.
 
 ## Goals
 - [Ease of use](#ease-of-use)
@@ -41,7 +42,7 @@
 
 ## Phases
 This project was implemented in multiple stages, each with a specific goal in order to show progression in knowledge and ability:
-- Phase 0: [Problem definition and planning](https://github.com/fostercm/Scalable-Distributed-KV-Store)
+- Phase 0: [Problem definition and planning](#phase-0:-problem-definition-and-planning)
 - Phase 1: [Basic functionality](https://github.com/fostercm/Scalable-Distributed-KV-Store/tree/Phase-1-Basic-Functionality)
 - Phase 2: [Sharding and scaling](https://github.com/fostercm/Scalable-Distributed-KV-Store/tree/Phase-2-Sharding/Scaling)
 - Phase 3: Dynamic scaling
@@ -49,3 +50,13 @@ This project was implemented in multiple stages, each with a specific goal in or
 - Phase 5: Observability
 - Phase 6: Security
 - Phase 7: Testing and polishing
+
+## Collaboration
+This project is a solo endeavor I am taking on to master distributed systems concepts so pull requests will not be reviewed.
+However, if you stumble across this work and would like to give suggestions or pointers I have created a **suggestion** issue label.
+
+## Acknowledgements
+Thank you to the CS department at MIT for making your course materials public and thus inspiring this project.
+That being said, all code in this project is written by myself and not taken from any course materials.
+
+# Phase 0: Problem definition and planning
