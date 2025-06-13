@@ -59,4 +59,7 @@ However, if you stumble across this work and would like to give suggestions or p
 Thank you to the CS department at MIT for making your course materials public and thus inspiring this project.
 That being said, all code in this project is written by myself and not taken from any course materials.
 
+## License
+This project is licensed under the MIT license, check the LICENSE file to learn more.
+
 # Phase 0: Problem definition and planning
